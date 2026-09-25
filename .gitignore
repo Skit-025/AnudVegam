@@ -216,3 +216,18 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Node / Frontend / Vercel
+node_modules/
+**/node_modules/
+dist/
+**/dist/
+.vercel/
+*.local
+.env
+.env.*.local
+
+# Databases
+*.db
+*.sqlite3
+

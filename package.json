@@ -1,0 +1,9 @@
+{
+  "name": "sih-2026-medikiosk-root",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MediKiosk Root Monorepo configuration for Vercel deployment",
+  "scripts": {
+    "build": "npm --prefix frontend install && npm --prefix frontend run build"
+  }
+}

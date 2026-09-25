@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: medikiosk-postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-medikiosk}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-medikiosk_secret}
+      POSTGRES_DB: ${DB_NAME:-medikiosk_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U medikiosk -d medikiosk_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: medikiosk-backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://medikiosk:medikiosk_secret@postgres:5432/medikiosk_db
+      DIALOGUE_SERVICE_URL: http://dialogue-service:8001
+      OCR_SERVICE_URL: http://ocr-service:8002
+      SUMMARIZER_SERVICE_URL: http://summarizer-service:8003
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  dialogue-service:
+    build:
+      context: ./ai-services/dialogue
+      dockerfile: Dockerfile
+    container_name: medikiosk-dialogue
+    ports:
+      - "8001:8001"
+
+  ocr-service:
+    build:
+      context: ./ai-services/ocr
+      dockerfile: Dockerfile
+    container_name: medikiosk-ocr
+    ports:
+      - "8002:8002"
+
+  summarizer-service:
+    build:
+      context: ./ai-services/summarizer
+      dockerfile: Dockerfile
+    container_name: medikiosk-summarizer
+    ports:
+      - "8003:8003"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: medikiosk-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

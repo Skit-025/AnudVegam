@@ -1,0 +1,11 @@
+# Vercel deployment ignore list
+backend/
+ai-services/
+database/
+docs/
+*.db
+*.sqlite3
+docker-compose.yml
+.git
+.github
+tests/
