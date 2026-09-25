@@ -46,3 +46,15 @@ MediKiosk is pre-configured for seamless deployment to [Vercel](https://vercel.c
 - **SPA Rewrites**: Configured via [vercel.json](vercel.json) to support client-side routing on all pages.
 
 For step-by-step instructions, see [docs/VERCEL_DEPLOYMENT.md](docs/VERCEL_DEPLOYMENT.md).
+
+## Render Deployment (Backend & Database)
+
+MediKiosk Backend is configured for deployment to [Render](https://render.com):
+- **Service Type**: Web Service (Python 3)
+- **Root Directory**: `backend`
+- **Build Command**: `pip install -r requirements.txt`
+- **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+- **Database**: Render Managed PostgreSQL
+
+For step-by-step instructions, see [docs/RENDER_DEPLOYMENT.md](docs/RENDER_DEPLOYMENT.md).
+
